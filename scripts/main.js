@@ -43,3 +43,31 @@ function digitar() {
 }
 
 window.addEventListener("DOMContentLoaded", digitar);
+
+// Estrutura de cards
+
+const skills = [
+  { name: "HTML", icon: "fa-html5" },
+  { name: "CSS", icon: "fa-css3-alt" },
+  { name: "JavaScript", icon: "fa-js" },
+  { name: "React.js", icon: "fa-react" },
+];
+
+const container = document.querySelector(".cards-container");
+
+for (let skill of skills) {
+  const card = document.createElement("div");
+  card.className = "card";
+
+  const cardIcon = document.createElement("div");
+  cardIcon.className = "card-icon";
+  cardIcon.innerHTML = `<i class="fa-brands ${skill.icon}"></i>`;
+
+  const cardTitle = document.createElement("h3");
+  cardTitle.textContent = skill.name;
+
+  card.appendChild(cardIcon);
+  card.appendChild(cardTitle);
+
+  container.appendChild(card);
+}
