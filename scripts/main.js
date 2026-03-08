@@ -1,4 +1,3 @@
-// DarkMode
 const toggle = document.getElementById("toggle-theme");
 const body = document.body;
 const icon = toggle.querySelector("i");
@@ -12,7 +11,6 @@ toggle.addEventListener("click", () => {
   }
 });
 
-// Função: Bom Dia, Boa Tarde, Boa Noite!
 function carregar() {
   const msg = document.getElementById("msg");
   const hora = new Date().getHours();
@@ -29,7 +27,6 @@ function carregar() {
   msg.innerHTML = `<h1>${saudacao}</h1>`;
 }
 
-// Animação Nome
 const text = "Guilherme Fernando";
 const typedEl = document.getElementById("typed");
 
@@ -44,8 +41,6 @@ function digitar() {
 
 window.addEventListener("DOMContentLoaded", digitar);
 
-// Estrutura de cards
-
 const skills = [
   { name: "HTML", icon: "fa-html5" },
   { name: "CSS", icon: "fa-css3-alt" },
@@ -53,7 +48,7 @@ const skills = [
   { name: "React.js", icon: "fa-react" },
 ];
 
-const container = document.querySelector(".cards-container");
+const container = document.querySelector("#skills .cards-container");
 
 for (let skill of skills) {
   const card = document.createElement("div");
@@ -71,3 +66,52 @@ for (let skill of skills) {
 
   container.appendChild(card);
 }
+
+function criarCarrossel(containerSelector) {
+  const container = document.querySelector(containerSelector);
+  const items = container.children;
+
+  if (window.innerWidth > 768) return;
+
+  let index = 0;
+
+  for (let i = 0; i < items.length; i++) {
+    items[i].style.display = "none";
+  }
+
+  items[0].style.display = "block";
+
+  const prev = document.createElement("button");
+  const next = document.createElement("button");
+
+  prev.innerHTML = "▶";
+  next.innerHTML = "◀";
+
+  prev.style.margin = "10px";
+  next.style.margin = "10px";
+
+  container.after(prev);
+  container.after(next);
+
+  prev.onclick = () => {
+    items[index].style.display = "none";
+    index = (index - 1 + items.length) % items.length;
+    items[index].style.display = "block";
+  };
+
+  next.onclick = () => {
+    items[index].style.display = "none";
+    index = (index + 1) % items.length;
+    items[index].style.display = "block";
+  };
+}
+
+function iniciarCarrosseis() {
+  if (window.innerWidth <= 768) {
+    criarCarrossel("#projeto-container");
+    criarCarrossel("#certifications .cards-container");
+  }
+}
+
+window.addEventListener("load", iniciarCarrosseis);
+window.addEventListener("resize", iniciarCarrosseis);
