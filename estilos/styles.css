@@ -78,10 +78,13 @@ main {
 }
 
 section#ficha {
-  background-color: var(--fundo-card);
-  padding: 20px;
-  border-radius: 8px;
+  background: var(--fundo-card);
+  padding: 30px;
+  border-radius: 10px;
   text-align: center;
+  position: sticky;
+  top: 100px;
+  height: fit-content;
 }
 
 section#ficha img.foto {
@@ -120,6 +123,24 @@ div#social a {
 
 div#social a:hover {
   color: var(--destaque-inverso);
+}
+
+.btn-msg {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 18px;
+  background: var(--destaque);
+  color: var(--texto-inverso);
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.btn-msg:hover {
+  background: var(--destaque-inverso);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
 }
 
 section#detalhes {
@@ -233,6 +254,11 @@ footer {
   main {
     grid-template-columns: 1fr;
     margin: 10px;
+  }
+
+  section#ficha {
+    position: static;
+    top: auto;
   }
 
   section#ficha,

@@ -1,0 +1,106 @@
+@charset "utf-8";
+
+:root {
+  --fundo-principal: #f5f5f5;
+  --texto: #222222;
+  --texto-inverso: #fff;
+  --destaque: #0077ff;
+  --destaque-inverso: #66bbff;
+  --fundo-card: #fff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  background: var(--fundo-principal);
+  color: var(--texto);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* caixa do formulário */
+section {
+  background: var(--fundo-card);
+  padding: 40px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+section h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: var(--destaque);
+  text-transform: capitalize;
+}
+
+/* formulário */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+label {
+  font-weight: 600;
+}
+
+input,
+textarea {
+  padding: 10px;
+  border-radius: 6px;
+  border: 2px solid #ddd;
+  outline: none;
+  transition: 0.3s;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--destaque);
+}
+
+/* botão enviar */
+button {
+  margin-top: 10px;
+  padding: 12px;
+  border: none;
+  background: var(--destaque);
+  color: var(--texto-inverso);
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: var(--destaque-inverso);
+  transform: translateY(-2px);
+}
+
+/* botão voltar */
+.btn-msg {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  padding: 10px;
+  text-decoration: none;
+  background: transparent;
+  border: 2px solid var(--destaque);
+  color: var(--destaque);
+  border-radius: 8px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.btn-msg:hover {
+  background: var(--destaque);
+  color: var(--texto-inverso);
+}
