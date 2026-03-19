@@ -40,14 +40,13 @@ function digitar() {
 }
 
 window.addEventListener("DOMContentLoaded", digitar);
-
 const skills = [
-  { name: "HTML", icon: "fa-html5" },
-  { name: "CSS", icon: "fa-css3-alt" },
-  { name: "JavaScript", icon: "fa-js" },
-  { name: "React.js", icon: "fa-react" },
+  { name: "HTML", icon: "fab fa-html5" },
+  { name: "CSS", icon: "fab fa-css3-alt" },
+  { name: "JavaScript", icon: "fab fa-js" },
+  { name: "React.js", icon: "fab fa-react" },
+  { name: "MySQL", icon: "fas fa-database" },
 ];
-
 const container = document.querySelector("#skills .cards-container");
 
 for (let skill of skills) {
@@ -56,7 +55,7 @@ for (let skill of skills) {
 
   const cardIcon = document.createElement("div");
   cardIcon.className = "card-icon";
-  cardIcon.innerHTML = `<i class="fa-brands ${skill.icon}"></i>`;
+  cardIcon.innerHTML = `<i class="${skill.icon}"></i>`;
 
   const cardTitle = document.createElement("h3");
   cardTitle.textContent = skill.name;
