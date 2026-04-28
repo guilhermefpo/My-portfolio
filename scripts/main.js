@@ -65,3 +65,21 @@ for (let skill of skills) {
 
   container.appendChild(card);
 }
+
+async function buscarProjetos() {
+  try {
+    const responsta = await fetch("http://localhost:2000/projetos");
+    const dados = await responsta.json();
+
+    const container = document.getElementById("projeto-container");
+
+    console.log(dados);
+  } catch (error) {
+    console.error("Erro ao buscar projetos:", error);
+  }
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  digitar();
+  buscarProjetos();
+});

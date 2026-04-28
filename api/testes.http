@@ -1,0 +1,18 @@
+
+
+
+### Buscar 
+GET http://localhost:2000/projetos
+
+### Criar
+POST http://localhost:2000/projetos
+Content-Type: application/json
+
+{
+  "titulo": "Novo Projeto Fatec",
+  "descricao": "Desenvolvido em aula de DSM",
+  "link": "https://github.com/guilhermefpo"
+}
+
+### Deletar 
+DELETE http://localhost:2000/projetos/1
