@@ -1,10 +1,18 @@
+### =========================
+### PROJETOS
+### =========================
 
-
-
-### Buscar 
+### 🔹 GET - Listar todos os projetos
 GET http://localhost:2000/projetos
 
-### Criar
+###
+
+### 🔹 GET - Buscar projeto por ID
+GET http://localhost:2000/projetos/1
+
+###
+
+### 🔹 POST - Criar novo projeto
 POST http://localhost:2000/projetos
 Content-Type: application/json
 
@@ -14,5 +22,53 @@ Content-Type: application/json
   "link": "https://github.com/guilhermefpo"
 }
 
-### Deletar 
+###
+
+### 🔹 PUT - Atualizar projeto
+PUT http://localhost:2000/projetos/1
+Content-Type: application/json
+
+{
+  "titulo": "Projeto Atualizado",
+  "descricao": "Descrição atualizada"
+}
+
+###
+
+### 🔹 DELETE - Remover projeto
 DELETE http://localhost:2000/projetos/1
+
+###
+
+### =========================
+### CERTIFICADOS
+### =========================
+
+### 🔹 GET - Listar certificados
+GET http://localhost:2000/certificados
+
+###
+
+### 🔹 POST - Criar certificado
+POST http://localhost:2000/certificados
+Content-Type: application/json
+
+{
+  "titulo": "Novo Certificado",
+  "arquivo": "certificado.pdf"
+}
+
+###
+
+### 🔹 PUT - Atualizar certificado
+PUT http://localhost:2000/certificados/1
+Content-Type: application/json
+
+{
+  "titulo": "Certificado Atualizado"
+}
+
+###
+
+### 🔹 DELETE - Remover certificado
+DELETE http://localhost:2000/certificados/1
