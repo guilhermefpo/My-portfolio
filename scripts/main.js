@@ -39,32 +39,39 @@ function digitar() {
   }
 }
 
-window.addEventListener("DOMContentLoaded", digitar);
-const skills = [
-  { name: "HTML", icon: "fab fa-html5" },
-  { name: "CSS", icon: "fab fa-css3-alt" },
-  { name: "JavaScript", icon: "fab fa-js" },
-  { name: "React.js", icon: "fab fa-react" },
-  { name: "MySQL", icon: "fas fa-database" },
-];
-const container = document.querySelector("#skills .cards-container");
+async function buscarSkills() {
+  try {
+    const resposta = await fetch("http://localhost:2000/skills");
+    const dados = await resposta.json();
 
-for (let skill of skills) {
-  const card = document.createElement("div");
-  card.className = "card";
+    const container = document.querySelector("#skills .cards-container");
+    container.innerHTML = "";
 
-  const cardIcon = document.createElement("div");
-  cardIcon.className = "card-icon";
-  cardIcon.innerHTML = `<i class="${skill.icon}"></i>`;
+    for (let skill of dados) {
+      const card = document.createElement("div");
+      card.className = "card";
 
-  const cardTitle = document.createElement("h3");
-  cardTitle.textContent = skill.name;
+      const cardIcon = document.createElement("div");
+      cardIcon.className = "card-icon";
+      cardIcon.innerHTML = `<i class="${skill.icon}"></i>`;
 
-  card.appendChild(cardIcon);
-  card.appendChild(cardTitle);
+      const cardTitle = document.createElement("h3");
+      cardTitle.textContent = skill.name;
 
-  container.appendChild(card);
+      card.appendChild(cardIcon);
+      card.appendChild(cardTitle);
+
+      container.appendChild(card);
+    }
+  } catch (error) {
+    console.error("Erro ao carregar as skills da API:", error);
+  }
 }
+
+window.addEventListener("DOMContentLoaded", () => {
+  digitar();
+  buscarSkills();
+});
 
 async function buscarProjetos() {
   try {
@@ -82,4 +89,36 @@ async function buscarProjetos() {
 window.addEventListener("DOMContentLoaded", () => {
   digitar();
   buscarProjetos();
+});
+
+async function buscarCertificados() {
+  try {
+    const resposta = await fetch("http://localhost:2000/certificados");
+    const dados = await resposta.json();
+
+    const container = document.querySelector(
+      "#certifications .cards-container",
+    );
+
+    container.innerHTML = "";
+
+    dados.forEach((cert) => {
+      container.innerHTML += `
+        <div class="card">
+          <div class="card-icon">
+            <i class="fa-solid fa-certificate"></i>
+          </div>
+          <h3>${cert.titulo}</h3>
+          <a href="assets/certificacao/${cert.arquivo}" target="_blank">Visualizar</a>
+        </div>
+      `;
+    });
+  } catch (error) {
+    console.log("Erro ao buscar os certificados:", error);
+  }
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  digitar();
+  buscarCertificados();
 });

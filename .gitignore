@@ -1,2 +1,45 @@
+# Dependências
 node_modules/
+
+# Variáveis de ambiente
 .env
+.env.*
+!.env.example
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Build
+dist/
+build/
+.next/
+out/
+
+# Prisma
+prisma/dev.db
+prisma/dev.db-journal
+prisma/*.db
+prisma/*.db-journal
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Testes
+coverage/
+
+# Cache
+.cache/
+.tmp/
+temp/
+
+# Arquivos TypeScript
+*.tsbuildinfo
