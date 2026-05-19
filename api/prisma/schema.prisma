@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model certificados {
+  id      Int    @id @default(autoincrement())
+  titulo  String @db.VarChar(30)
+  arquivo String @db.VarChar(50)
+}
+
+model projetos {
+  id        Int    @id @default(autoincrement())
+  titulo    String @db.VarChar(40)
+  descricao String @db.VarChar(100)
+  link      String @db.VarChar(20)
+}
+
+model skills {
+  id    Int    @id @default(autoincrement())
+  name_ String @db.VarChar(10)
+  icon  String @db.VarChar(100)
+}
