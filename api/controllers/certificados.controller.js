@@ -1,21 +1,38 @@
-import { certificados } from "../data/certificados.js";
+import { PrismaClient } from "@prisma/client";
 
-export const getCertificados = (req, res) => {
-  res.json(certificados);
-};
+const prisma = new PrismaClient({});
 
-export const getCertificadoById = (req, res) => {
-  const { id } = req.params;
-  const cert = certificados.find((c) => c.id == id);
-
-  if (!cert) {
-    return res.status(404).json({ erro: "Certificado não encontrado" });
+export const getCertificados = async (req, res) => {
+  try {
+    const certificados = await prisma.certificados.findMany();
+    res.json(certificados);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ erro: "Erro ao buscar certificados no banco de dados." });
   }
-
-  res.json(cert);
 };
 
-export const criarCertificado = (req, res) => {
+export const getCertificadoById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const cert = await prisma.certificados.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!cert) {
+      return res.status(404).json({ erro: "Certificado não encontrado" });
+    }
+
+    res.json(cert);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao buscar o certificado." });
+  }
+};
+
+export const criarCertificado = async (req, res) => {
   const { titulo, arquivo } = req.body;
 
   if (!titulo || !arquivo) {
@@ -24,38 +41,45 @@ export const criarCertificado = (req, res) => {
     });
   }
 
-  const novo = {
-    id: certificados.length + 1,
-    titulo,
-    arquivo,
-  };
-
-  certificados.push(novo);
-  res.status(201).json(novo);
+  try {
+    const novoCertificado = await prisma.certificados.create({
+      data: { titulo, arquivo },
+    });
+    res.status(201).json(novoCertificado);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao salvar o certificado no banco." });
+  }
 };
 
-export const atualizarCertificado = (req, res) => {
+export const atualizarCertificado = async (req, res) => {
   const { id } = req.params;
-  const index = certificados.findIndex((c) => c.id == id);
+  const { titulo, arquivo } = req.body;
 
-  if (index === -1) {
-    return res.status(404).json({ erro: "Certificado não encontrado" });
+  try {
+    const certificadoAtualizado = await prisma.certificados.update({
+      where: { id: Number(id) },
+      data: { titulo, arquivo },
+    });
+
+    res.json(certificadoAtualizado);
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ erro: "Certificado não encontrado para atualizar" });
   }
-
-  certificados[index] = { ...certificados[index], ...req.body };
-
-  res.json(certificados[index]);
 };
 
-export const deletarCertificado = (req, res) => {
+export const deletarCertificado = async (req, res) => {
   const { id } = req.params;
-  const index = certificados.findIndex((c) => c.id == id);
 
-  if (index === -1) {
-    return res.status(404).json({ erro: "Certificado não encontrado" });
+  try {
+    await prisma.certificados.delete({
+      where: { id: Number(id) },
+    });
+
+    res.json({ mensagem: "Certificado removido com sucesso do MySQL" });
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ erro: "Certificado não encontrado para deletar" });
   }
-
-  certificados.splice(index, 1);
-
-  res.json({ mensagem: "Certificado removido com sucesso" });
 };

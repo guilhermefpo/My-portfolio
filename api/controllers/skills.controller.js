@@ -1,21 +1,36 @@
-import { skills } from "../data/skills.js";
+import { PrismaClient } from "@prisma/client";
 
-export const getSkills = (req, res) => {
-  res.json(skills);
-};
+const prisma = new PrismaClient({});
 
-export const getSkillById = (req, res) => {
-  const { id } = req.params;
-  const skill = skills.find((s) => s.id == id);
-
-  if (!skill) {
-    return res.status(404).json({ erro: "Skill não encontrada" });
+export const getSkills = async (req, res) => {
+  try {
+    const skills = await prisma.skills.findMany();
+    res.json(skills);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao buscar skills no banco de dados." });
   }
-
-  res.json(skill);
 };
 
-export const criarSkill = (req, res) => {
+export const getSkillById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const skill = await prisma.skills.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!skill) {
+      return res.status(404).json({ erro: "Skill não encontrada" });
+    }
+
+    res.json(skill);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao buscar a skill." });
+  }
+};
+
+export const criarSkill = async (req, res) => {
   const { name, icon } = req.body;
 
   if (!name || !icon) {
@@ -24,38 +39,52 @@ export const criarSkill = (req, res) => {
     });
   }
 
-  const novaSkill = {
-    id: skills.length > 0 ? skills[skills.length - 1].id + 1 : 1,
-    name,
-    icon,
-  };
-
-  skills.push(novaSkill);
-  res.status(201).json(novaSkill);
+  try {
+    const novaSkill = await prisma.skills.create({
+      data: {
+        name_: name,
+        icon: icon,
+      },
+    });
+    res.status(201).json(novaSkill);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao salvar a skill no banco." });
+  }
 };
 
-export const atualizarSkill = (req, res) => {
+export const atualizarSkill = async (req, res) => {
   const { id } = req.params;
-  const index = skills.findIndex((s) => s.id == id);
+  const { name, icon } = req.body;
 
-  if (index === -1) {
-    return res.status(404).json({ erro: "Skill não encontrada" });
+  try {
+    const dadosAtualizados = {};
+    if (name) dadosAtualizados.name_ = name;
+    if (icon) dadosAtualizados.icon = icon;
+
+    const skillAtualizada = await prisma.skills.update({
+      where: { id: Number(id) },
+      data: dadosAtualizados,
+    });
+
+    res.json(skillAtualizada);
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ erro: "Skill não encontrada para atualizar" });
   }
-
-  skills[index] = { ...skills[index], ...req.body };
-
-  res.json(skills[index]);
 };
 
-export const deletarSkill = (req, res) => {
+export const deletarSkill = async (req, res) => {
   const { id } = req.params;
-  const index = skills.findIndex((s) => s.id == id);
 
-  if (index === -1) {
-    return res.status(404).json({ erro: "Skill não encontrada" });
+  try {
+    await prisma.skills.delete({
+      where: { id: Number(id) },
+    });
+
+    res.json({ mensagem: "Skill deletada com sucesso do MySQL" });
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ erro: "Skill não encontrada para deletar" });
   }
-
-  skills.splice(index, 1);
-
-  res.json({ mensagem: "Skill deletada com sucesso" });
 };

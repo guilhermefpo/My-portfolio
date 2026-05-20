@@ -1,21 +1,38 @@
-import { projetos } from "../data/projetos.js";
+import { PrismaClient } from "@prisma/client";
 
-export const getProjetos = (req, res) => {
-  res.json(projetos);
-};
+const prisma = new PrismaClient({});
 
-export const getProjetoById = (req, res) => {
-  const { id } = req.params;
-  const projeto = projetos.find((p) => p.id == id);
-
-  if (!projeto) {
-    return res.status(404).json({ erro: "Projeto não encontrado" });
+export const getProjetos = async (req, res) => {
+  try {
+    const projetos = await prisma.projetos.findMany();
+    res.json(projetos);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ erro: "Erro ao buscar projetos no banco de dados." });
   }
-
-  res.json(projeto);
 };
 
-export const criarProjeto = (req, res) => {
+export const getProjetoById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const projeto = await prisma.projetos.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!projeto) {
+      return res.status(404).json({ erro: "Projeto não encontrado" });
+    }
+
+    res.json(projeto);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao buscar o projeto." });
+  }
+};
+
+export const criarProjeto = async (req, res) => {
   const { titulo, descricao, link } = req.body;
 
   if (!titulo || !descricao || !link) {
@@ -24,39 +41,45 @@ export const criarProjeto = (req, res) => {
     });
   }
 
-  const novo = {
-    id: projetos.length + 1,
-    titulo,
-    descricao,
-    link,
-  };
-
-  projetos.push(novo);
-  res.status(201).json(novo);
+  try {
+    const novoProjeto = await prisma.projetos.create({
+      data: { titulo, descricao, link },
+    });
+    res.status(201).json(novoProjeto);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao salvar o projeto no banco." });
+  }
 };
 
-export const atualizarProjeto = (req, res) => {
+export const atualizarProjeto = async (req, res) => {
   const { id } = req.params;
-  const index = projetos.findIndex((p) => p.id == id);
+  const { titulo, descricao, link } = req.body;
 
-  if (index === -1) {
-    return res.status(404).json({ erro: "Projeto não encontrado" });
+  try {
+    const projetoAtualizado = await prisma.projetos.update({
+      where: { id: Number(id) },
+      data: { titulo, descricao, link },
+    });
+
+    res.json(projetoAtualizado);
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ erro: "Projeto não encontrado para atualizar" });
   }
-
-  projetos[index] = { ...projetos[index], ...req.body };
-
-  res.json(projetos[index]);
 };
 
-export const deletarProjeto = (req, res) => {
+export const deletarProjeto = async (req, res) => {
   const { id } = req.params;
-  const index = projetos.findIndex((p) => p.id == id);
 
-  if (index === -1) {
-    return res.status(404).json({ erro: "Projeto não encontrado" });
+  try {
+    await prisma.projetos.delete({
+      where: { id: Number(id) },
+    });
+
+    res.json({ mensagem: "Projeto deletado com sucesso do MySQL" });
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ erro: "Projeto não encontrado para deletar" });
   }
-
-  projetos.splice(index, 1);
-
-  res.json({ mensagem: "Projeto deletado com sucesso" });
 };
