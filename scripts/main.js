@@ -45,6 +45,7 @@ async function buscarSkills() {
     const dados = await resposta.json();
 
     const container = document.querySelector("#skills .cards-container");
+    if (!container) return;
     container.innerHTML = "";
 
     for (let skill of dados) {
@@ -56,11 +57,10 @@ async function buscarSkills() {
       cardIcon.innerHTML = `<i class="${skill.icon}"></i>`;
 
       const cardTitle = document.createElement("h3");
-      cardTitle.textContent = skill.name;
+      cardTitle.textContent = skill.name_;
 
       card.appendChild(cardIcon);
       card.appendChild(cardTitle);
-
       container.appendChild(card);
     }
   } catch (error) {
@@ -68,29 +68,33 @@ async function buscarSkills() {
   }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  digitar();
-  buscarSkills();
-});
-
 async function buscarProjetos() {
   try {
-    const responsta = await fetch("http://localhost:2000/projetos");
-    const dados = await responsta.json();
+    const resposta = await fetch("http://localhost:2000/projetos");
+    const dados = await resposta.json();
 
-    const container = document.getElementById("projeto-container");
+    const cardsEstaticos = document.querySelectorAll(
+      "#projeto-container .projeto",
+    );
 
-    console.log(dados);
+    dados.forEach((projeto, i) => {
+      if (cardsEstaticos[i]) {
+        const tituloElemento = cardsEstaticos[i].querySelector(".titulo");
+        if (tituloElemento) {
+          tituloElemento.textContent = projeto.titulo;
+        }
+
+        const descricaoElemento =
+          cardsEstaticos[i].querySelector(".descricao p");
+        if (descricaoElemento) {
+          descricaoElemento.textContent = projeto.descricao;
+        }
+      }
+    });
   } catch (error) {
     console.error("Erro ao buscar projetos:", error);
   }
 }
-
-window.addEventListener("DOMContentLoaded", () => {
-  digitar();
-  buscarProjetos();
-});
-
 async function buscarCertificados() {
   try {
     const resposta = await fetch("http://localhost:2000/certificados");
@@ -99,7 +103,7 @@ async function buscarCertificados() {
     const container = document.querySelector(
       "#certifications .cards-container",
     );
-
+    if (!container) return;
     container.innerHTML = "";
 
     dados.forEach((cert) => {
@@ -119,6 +123,8 @@ async function buscarCertificados() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  digitar();
+  digitar(); // Roda a digitação apenas uma vez!
+  buscarSkills();
+  buscarProjetos();
   buscarCertificados();
 });
